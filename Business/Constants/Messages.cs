@@ -12,6 +12,6 @@ namespace Business.Constants
         public static string ProductAdded = "Ürün eklendi";
         public static string ProductNameInvalid = "Ürün ismi geçersiz"; // publicler PascalCase
         internal static string MaintenanceTime = "Sistem bakımda";
-        internal static string ProductsListed="Ürünlen listelendi.";
+        internal static string ProductsListed="Ürünler listelendi.";
     }
 }

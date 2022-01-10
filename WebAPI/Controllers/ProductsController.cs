@@ -1,24 +1,57 @@
-﻿using Entities.Concrete;
-using Microsoft.AspNetCore.Http;
+﻿using Business.Abstract;
+using Business.Concrete;
+using DataAccess.Concrete.EntityFramework;
+using Entities.Concrete;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]  // ATTRIBUTE
-    public class ProductsController : ControllerBase
-    {   [HttpGet]
-        public List<Product> Get()
+    public class ProductsController : ControllerBase // API naming must be plural like given in example Products
+    {   // LOOSELY Coupled
+        // naming convention
+        // IoC Container -- Inversion of Control
+        IProductService _productService;
+
+        public ProductsController(IProductService productService)
+
         {
-            return new List<Product>
+            _productService = productService;
+        }
+        [HttpGet("getall")]
+        public IActionResult GetAll()
+        { // Dependency chain --
+            // Swagger
+            var result=_productService.GetAll();
+            if (result.Success)
             {
-            new Product { ProductId=1,ProductName="Elma"},
-            new Product { ProductId = 2, ProductName = "Armut" }
-            };
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+        [HttpPost("add")]
+        public IActionResult Add(Product product)
+        {
+            var result = _productService.Add(product);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+
+        }
+
+        [HttpGet("getbyid")]
+        public IActionResult GetById(int id)
+        {
+            var result = _productService.GetById(id);
+            if(result.Success)
+            {
+                return Ok(result.Data);
+            }
+            return BadRequest(result);
         }
     }
 }
